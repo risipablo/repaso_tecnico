@@ -1,0 +1,446 @@
+/* Variables de color */
+:root {
+    --primary-color: #6366f1;
+    --primary-hover: #4f46e5;
+    --danger-color: #ef4444;
+    --danger-hover: #dc2626;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+    --border-color: #e5e7eb;
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+}
+
+
+
+.container-task {
+    max-width: 1200px;
+    margin: 2rem auto;
+    background: var(--bg-primary);
+    border-radius: 16px;
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+}
+
+.task-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    text-align: center;
+}
+
+.task-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.inputs-task {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 2rem;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+    flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+    .inputs-task {
+        flex-direction: column;
+    }
+    
+    .inputs-task .input-group,
+    .inputs-task .priority-select {
+        width: 100%;
+    }
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: white;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.75rem;
+    transition: all 0.2s;
+    min-width: fit-content;
+}
+
+/* Tamaños específicos para cada input */
+.input-group:has(input[type="date"]) {
+    width: 180px;
+}
+
+.input-group:has(input[type="text"]) {
+    flex: 1;
+    min-width: 250px;
+}
+
+.input-group:focus-within {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.input-group svg {
+    color: var(--text-secondary);
+    flex-shrink: 0;
+}
+
+.input-group input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    background: transparent;
+    min-width: 0;
+}
+
+/* Mejorar el selector de fecha */
+.input-group input[type="date"] {
+    cursor: pointer;
+    position: relative;
+}
+
+.input-group input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.input-group input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+}
+
+.priority-select {
+    width: 180px;
+    background: white;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.75rem;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.priority-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    outline: none;
+}
+
+.btn-add {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.btn-add:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-add:active {
+    transform: translateY(0);
+}
+
+.list-task {
+    padding: 2rem;
+}
+
+.loading {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-secondary);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-secondary);
+}
+
+.empty-state svg {
+    margin-bottom: 1rem;
+    opacity: 0.3;
+}
+
+.empty-state p {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.empty-state span {
+    font-size: 0.95rem;
+}
+
+.table-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1.5rem;
+}
+
+.btn-delete-all {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--danger-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-delete-all:hover {
+    background: var(--danger-hover);
+    transform: translateY(-1px);
+}
+
+.table-container {
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+thead {
+    background: var(--bg-secondary);
+}
+
+th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid var(--border-color);
+}
+
+td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+tbody tr {
+    transition: background-color 0.2s;
+}
+
+tbody tr:hover {
+    background: var(--bg-secondary);
+}
+
+/* Subrayado para tareas completadas */
+.task-title {
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+tr:has(.status-completed) .task-title {
+    text-decoration: line-through;
+    opacity: 0.6;
+    color: var(--text-secondary);
+}
+
+.priority-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.priority-badge.alta {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.priority-badge.media {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.priority-badge.baja {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.status-completed {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background: #d1fae5;
+    color: #065f46;
+    transition: all 0.2s;
+}
+
+.status-pending {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background: #fef3c7;
+    color: #92400e;
+    transition: all 0.2s;
+}
+
+/* Efecto hover en el estado cuando es clickeable */
+td[style*="cursor:pointer"] .status-completed,
+td[style*="cursor:pointer"] .status-pending {
+    cursor: pointer;
+}
+
+td[style*="cursor:pointer"] .status-completed:hover {
+    background: #a7f3d0;
+    transform: scale(1.05);
+}
+
+td[style*="cursor:pointer"] .status-pending:hover {
+    background: #fde68a;
+    transform: scale(1.05);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-edit,
+.btn-delete,
+.btn-save,
+.btn-cancel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-edit {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.btn-edit:hover {
+    background: #bfdbfe;
+    transform: scale(1.05);
+}
+
+.btn-delete {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.btn-delete:hover {
+    background: #fecaca;
+    transform: scale(1.05);
+}
+
+.btn-save {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.btn-save:hover {
+    background: #a7f3d0;
+    transform: scale(1.05);
+}
+
+.btn-cancel {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.btn-cancel:hover {
+    background: #e5e7eb;
+    transform: scale(1.05);
+}
+
+.edit-input {
+    width: 100%;
+    max-width: 200px;
+    padding: 0.5rem;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.edit-input[type="date"] {
+    cursor: pointer;
+}
+
+.edit-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+tbody tr {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Animación cuando se completa una tarea */
+@keyframes strikeThrough {
+    from {
+        text-decoration-color: transparent;
+    }
+    to {
+        text-decoration-color: currentColor;
+    }
+}
+
+tr:has(.status-completed) .task-title {
+    animation: strikeThrough 0.3s ease-out;
+}
