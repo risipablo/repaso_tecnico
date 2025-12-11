@@ -5,5 +5,12 @@ export interface ITask{
     title:string;
     priority: string;
     completed?:boolean
+}
 
+export interface IUsers{
+    id:number
+    name:string
+    job:string
+    age:number
+    salary:number
 }

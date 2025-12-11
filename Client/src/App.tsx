@@ -3,6 +3,7 @@ import { TODO } from "./pages/todo"
 
 import { Home } from "./pages/home"
 import { Menu } from "./components/menu"
+import { UserPage } from "./pages/userPage"
 
 
 
@@ -19,6 +20,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home/>} />
         <Route path="/todo" element={<TODO/>} />
+        <Route path="/api-local" element={<UserPage/>} />
 
       </Routes>
       

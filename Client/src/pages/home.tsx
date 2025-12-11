@@ -13,6 +13,10 @@ export const Home = () => {
                 Gestion de productos
             </NavLink>
 
+            <NavLink to="/api-local">
+                API Local
+            </NavLink>
+
         </div>
     )
 }
