@@ -1,12 +1,33 @@
 import type { IUsers } from "../types/interface";
-
-export const users:IUsers[] = [
-    {id:1, name:"Pablo", job:"Developer Front End", age:30,salary:4500},
-    {id:2, name:"Luke", job:"Developer Back End", age:23,salary:3200},
-    {id:3, name:"David", job:"Enginer Software", age:38,salary:10000},
-    {id:4, name:"Aaron", job:"Developer Front End", age:25,salary:2000},
-    {id:5, name:"Lucas", job:"Cibersecurity", age:30,salary:1500},
-    {id:6, name:"Mike", job:"CEO", age:53,salary:24000},
-    {id:7, name:"Mathew", job:"Developer Jr ", age:29,salary:1500}
-
-]
+export const users: IUsers[] = [
+    {id:1, name:"Pablo", job:"Developer Front End", age:30, salary:4500, area: "Tecnología"},
+    {id:2, name:"Luke", job:"Developer Back End", age:23, salary:3200, area: "Tecnología"},
+    {id:3, name:"David", job:"Enginer Software", age:38, salary:10000, area: "Tecnología"},
+    {id:4, name:"Aaron", job:"Developer Front End", age:25, salary:2000, area: "Tecnología"},
+    {id:5, name:"Lucas", job:"Cibersecurity", age:30, salary:1500, area: "Tecnología"},
+    {id:6, name:"Mike", job:"CEO", age:53, salary:24000, area: "Dirección"},
+    {id:7, name:"Mathew", job:"Developer Jr", age:29, salary:1500, area: "Tecnología"},
+    {id:8, name:"Sarah", job:"Data Scientist", age:27, salary:5200, area: "Tecnología"},
+    {id:9, name:"John", job:"Product Manager", age:41, salary:8700, area: "Producto"},
+    {id:10, name:"Emma", job:"UX/UI Designer", age:26, salary:3900, area: "Diseño"},
+    {id:11, name:"Robert", job:"QA Automation", age:32, salary:3100, area: "Tecnología"},
+    {id:12, name:"Sophia", job:"DevOps Engineer", age:34, salary:6800, area: "Tecnología"},
+    {id:13, name:"Olivia", job:"Marketing Manager", age:35, salary:7500, area: "Marketing"},
+    {id:14, name:"James", job:"Digital Marketing", age:28, salary:4200, area: "Marketing"},
+    {id:15, name:"Charlotte", job:"Sales Executive", age:31, salary:6500, area: "Ventas"},
+    {id:16, name:"Benjamin", job:"Content Creator", age:26, salary:3800, area: "Marketing"},
+    {id:17, name:"Amelia", job:"SEO Specialist", age:29, salary:5100, area: "Marketing"},
+    {id:18, name:"William", job:"Sales Manager", age:42, salary:9200, area: "Ventas"},
+    {id:19, name:"Isabella", job:"HR Manager", age:37, salary:7200, area: "Recursos Humanos"},
+    {id:20, name:"Henry", job:"Recruiter", age:27, salary:3400, area: "Recursos Humanos"},
+    {id:21, name:"Mia", job:"Training Specialist", age:30, salary:4600, area: "Recursos Humanos"},
+    {id:22, name:"Daniel", job:"Financial Analyst", age:33, salary:6800, area: "Finanzas"},
+    {id:23, name:"Evelyn", job:"Accountant", age:29, salary:4900, area: "Finanzas"},
+    {id:24, name:"Alexander", job:"CFO", age:48, salary:18000, area: "Finanzas"},
+    {id:25, name:"Abigail", job:"Operations Manager", age:39, salary:8500, area: "Operaciones"},
+    {id:26, name:"Sebastian", job:"Logistics Coordinator", age:32, salary:4300, area: "Logística"},
+    {id:27, name:"Emily", job:"Legal Counsel", age:36, salary:9500, area: "Legal"},
+    {id:28, name:"Michael", job:"Research Scientist", age:34, salary:7800, area: "I+D"},
+    {id:29, name:"Ella", job:"Customer Success", age:28, salary:4100, area: "Atención al Cliente"},
+    {id:30, name:"Matthew", job:"Office Administrator", age:30, salary:3500, area: "Administración"}
+];

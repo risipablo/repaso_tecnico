@@ -13,4 +13,11 @@ export interface IUsers{
     job:string
     age:number
     salary:number
+    area:string
+}
+
+export interface ISearchProps{
+    placeholder: string;
+    filterData: (searchterms: string[]) => void
+    
 }
