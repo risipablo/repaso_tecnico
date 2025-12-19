@@ -3,31 +3,35 @@ import { useUser } from "../hook/useUser"
 import { Search } from "../components/search"
 import { Filter } from "../components/filter"
 import type { IUsers } from "../types/interface"
-import { OrderName } from "../components/orderName"
 
 
 
-export function UserPage(){
 
-    const {fetch,userFilter,user,setUserFilter,showAllUsers} = useUser()
+export function UserPage() {
+    const { fetch, userFilter, user, setUserFilter, showAllUsers } = useUser()
+    const [searchResults, setSearchResults] = useState<IUsers[]>([])
+    const [hasActiveSearch, setHasActiveSearch] = useState<boolean>(false)
+    
+    // Estado de filtros en el padre
+    const [filterJobs, setFilterJobs] = useState<string>("")
+    const [filterAreas, setFilterAreas] = useState<string>("")
+    const [filterSalaryMax, setFilterSalaryMax] = useState<boolean>(false)
+    const [filterSalaryMin, setFilterSalaryMin] = useState<boolean>(false)
 
     useEffect(() => {
         fetch()
     }, [])
 
-
-    const [searchResults, setSearchResults] = useState<IUsers[]>([])
-    const [activeSearch, setActiveSearch] = useState<boolean>(false)
-
-    const handleSearch = (searchTerms:string[]) => {
-        if(searchTerms.length === 0) {
-            // resetear Busqueda
+    // Manejar búsqueda
+    const handleSearch = (searchTerms: string[]) => {
+        if (searchTerms.length === 0) {
+            // Resetear TODO
             setSearchResults([])
-            setActiveSearch(false)
-            showAllUsers()
-        }else{
-            // filtrar los usuarios con sus coincidencias
-            const result = user.filter(prod => 
+            setHasActiveSearch(false)
+            resetAllFiltersAndSearch()
+        } else {
+            // Aplicar búsqueda
+            const results = user.filter(prod => 
                 searchTerms.every(term => 
                     prod.name.toUpperCase().includes(term) ||
                     prod.salary.toString().includes(term) ||
@@ -36,49 +40,117 @@ export function UserPage(){
                     prod.area.toUpperCase().includes(term)
                 )
             )
-
-            setSearchResults(result) // guarda resultados
-            setActiveSearch(true)    // busqueda activa
-            setUserFilter(result)   // mostrar resultados
+            
+            setSearchResults(results)
+            setHasActiveSearch(true)
+            applyAllFilters(results)
         }
     }
 
+    // Aplicar todos los filtros a una lista base
+    const applyAllFilters = (baseUsers: IUsers[]) => {
+        let filtered = [...baseUsers]
 
-    const handleCleanAll = () => {
-        setSearchResults([])
-        setActiveSearch(false)
+        // Filtro por trabajo
+        if (filterJobs.trim() !== '') {
+            filtered = filtered.filter(p => 
+                p.job.toUpperCase().includes(filterJobs.toUpperCase())
+            )
+        }
+
+        // Filtro por área
+        if (filterAreas.trim() !== '') {
+            filtered = filtered.filter(p => 
+                p.area.toUpperCase().includes(filterAreas.toUpperCase())
+            )
+        }
+
+        // Filtro por salario máximo
+        if (filterSalaryMax && filtered.length > 0) {
+            const max = filtered.reduce((max, user) => 
+                user.salary > max.salary ? user : max,
+                filtered[0]
+            )
+            filtered = filtered.filter(p => p.salary === max.salary)
+        }
+
+        // Filtro por salario mínimo
+        if (filterSalaryMin && filtered.length > 0) {
+            const min = filtered.reduce((minus, user) => 
+                user.salary < minus.salary ? user : minus,
+                filtered[0]
+            )
+            filtered = filtered.filter(p => p.salary === min.salary)
+        }
+
+        setUserFilter(filtered)
+    }
+
+    // Resetear TODO (búsqueda + filtros)
+    const resetAllFiltersAndSearch = () => {
+        setFilterJobs("")
+        setFilterAreas("")
+        setFilterSalaryMax(false)
+        setFilterSalaryMin(false)
         showAllUsers()
     }
 
+    // Resetear solo filtros (mantener búsqueda)
+    const resetOnlyFilters = () => {
+        setFilterJobs("")
+        setFilterAreas("")
+        setFilterSalaryMax(false)
+        setFilterSalaryMin(false)
+        
+        // Re-aplicar solo búsqueda si existe
+        if (hasActiveSearch && searchResults.length > 0) {
+            setUserFilter([...searchResults])
+        } else {
+            showAllUsers()
+        }
+    }
 
+    // Cuando cambia cualquier filtro, aplicarlos
+    useEffect(() => {
+        const baseUsers = hasActiveSearch ? searchResults : user
+        applyAllFilters(baseUsers)
+    }, [filterJobs, filterAreas, filterSalaryMax, filterSalaryMin])
 
-
-    return(
+    return (
         <div className="user-container">
             <h1>User Data</h1>
 
             <div>
-                <Search placeholder="Buscar usuarios" filterData={handleSearch} />
+                <Search 
+                    placeholder="Buscar usuarios..." 
+                    filterData={handleSearch} 
+                />
             </div>
 
             <div>
-                 <button onClick={handleCleanAll}> Mostrar todos</button>
-                 <Filter userFilter={activeSearch ? searchResults:user} setUserFilter={setUserFilter} />
-
+                <button onClick={resetAllFiltersAndSearch}>Limpiar TODO</button>
                 
-
-                
+                <Filter 
+                    jobs={filterJobs}
+                    setJobs={setFilterJobs}
+                    areas={filterAreas}
+                    setAreas={setFilterAreas}
+                    salaryMax={filterSalaryMax}
+                    setSalaryMax={setFilterSalaryMax}
+                    salaryMin={filterSalaryMin}
+                    setSalaryMin={setFilterSalaryMin}
+                    onReset={resetOnlyFilters}
+                />
             </div>
 
-
             {userFilter.length === 0 ? (
-                <p>No hay usuarios registrados</p>
+                <p>No hay usuarios</p>
             ) : (
                 <div className="user-table">
                     <table>
                         <thead>
                             <tr>
-                                <th>Name <OrderName userFilter={userFilter} setUserFilter={setUserFilter} /> </th>
+                                <th>Name</th>
                                 <th>Job</th>
                                 <th>Area</th>
                                 <th>Age</th>
@@ -88,11 +160,11 @@ export function UserPage(){
                         <tbody>
                             {userFilter.map((user) => (
                                 <tr key={user.id}>
-                                    <td data-label="Name">{user.name}</td>
-                                    <td data-label="Job">{user.job}</td>
-                                    <td data-label="Area">{user.area}</td>
-                                    <td data-label="Age">{user.age}</td>
-                                    <td data-label="Salary"> $ {user.salary}</td>
+                                    <td>{user.name}</td>
+                                    <td>{user.job}</td>
+                                    <td>{user.area}</td>
+                                    <td>{user.age}</td>
+                                    <td>${user.salary.toLocaleString()}</td>
                                 </tr>
                             ))}
                         </tbody>

@@ -1,25 +1,28 @@
-import { useState } from "react"
+import {  useState } from "react"
 import { UseTask } from "../hook/useTask"
 import type { ITask } from "../types/interface"
 import "../components/task.css"
 import { AlertCircle, Calendar, Edit2, Plus, Save, Trash2, X } from "lucide-react"
 
+
+
 export const CrudTask = () => {
-    const {tasks,addTask,loading,deleteTask,deleteAll,saveTask,completedTask} = UseTask()
+    const {tasks, addTask, loading, deleteTask, deleteAll, saveTask, completedTask, multiplyAmounts} = UseTask()
 
-    const [date,setDate] = useState<string>("")
-    const [title,setTitle] = useState<string>("")
-    const [priority,setPriority] = useState<string>("")
-
+    const [date, setDate] = useState<string>("")
+    const [title, setTitle] = useState<string>("")
+    const [priority, setPriority] = useState<string>("")
+    const [amount, setAmount] = useState<number>(0)
 
     const handleAddTask = () => {
-        addTask(new Date(date), title, priority)
+        addTask(new Date(date), title, priority, amount)
         setDate("")
         setTitle("")
+        setAmount(0)
         setPriority("")
     }
 
-    const handleDeleteTask = (id:string) => {
+    const handleDeleteTask = (id: string) => {
         deleteTask(id)
     }
 
@@ -27,53 +30,72 @@ export const CrudTask = () => {
         deleteAll()
     }
 
-    // edicion
-    const [editId,setEditId] = useState<string | null>(null)
-    const [editData,setEditData] = useState({
-        date:"",
+    // Edición
+    const [editId, setEditId] = useState<string | null>(null)
+    const [editData, setEditData] = useState({
+        date: "",
         title: '',
-        priority:""
-
+        priority: "",
+        amount: 0
     })
 
-    const handleEditTask = (task:ITask) => {
+    const handleEditTask = (task: ITask) => {
         setEditId(task._id)
         setEditData({
             date: task.date instanceof Date ? task.date.toISOString().split('T')[0] : task.date,
-            title:task.title,
-            priority:task.priority
+            title: task.title,
+            priority: task.priority,
+            amount: task.amount
         })
     }
 
-    const handleSaveTask = (id:string) => {
-        saveTask(id,{
-            date:new Date(editData.date),
-             title: editData.title,
-            priority: editData.priority
+    const handleSaveTask = (id: string) => {
+        saveTask(id, {
+            date: new Date(editData.date),
+            title: editData.title,
+            priority: editData.priority,
+            amount: editData.amount
         })
         setEditData({
-            date:"",
-            title:"",
-            priority:""
+            date: "",
+            title: "",
+            priority: "",
+            amount: 0
         })
         setEditId(null)
     }
 
     const handleCancelEdit = () => {
         setEditData({
-            date:"",
-            title:"",
-            priority:""
+            date: "",
+            title: "",
+            priority: "",
+            amount: 0
         })
         setEditId(null)
     }
 
-    const handleCompletedtask = (id:string, completed:boolean) => {
+    const handleCompletedtask = (id: string, completed: boolean) => {
         completedTask(id, completed)
-
     }
 
-  return (
+    // Multiplicador global
+    const [multiplier, setMultiplier] = useState<number>(2)
+    const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null)
+
+    const handleMultiplyAmounts = () => {
+        if (selectedTaskId) {
+            multiplyAmounts(selectedTaskId, multiplier)
+            setSelectedTaskId(null) // Resetear selección después de multiplicar
+        }
+    }
+
+    // Multiplicador rápido en cada fila (siempre x2)
+    const handleQuickMultiply = (taskId: string) => {
+        multiplyAmounts(taskId, 2)
+    }
+
+    return (
         <div className="container-task">
             <div className="task-header">
                 <h1>Gestor de Tareas</h1>
@@ -104,10 +126,55 @@ export const CrudTask = () => {
                         <option value="baja">Baja</option>
                     </select>
                 </div>
+
+                <div className="input-group">
+                    <input 
+                        type="number" 
+                        placeholder="Cantidad"
+                        value={amount} 
+                        onChange={(e) => setAmount(Number(e.target.value))} 
+                    />
+                </div>
                 <button onClick={handleAddTask} className="btn-add">
                     <Plus size={20} />
                     Agregar Tarea
                 </button>
+            </div>
+
+            {/* Sección de multiplicador personalizado */}
+            <div className="multiply-section">
+                <div className="multiply-container">
+                    <select 
+                        value={selectedTaskId || ''}
+                        onChange={(e) => setSelectedTaskId(e.target.value)}
+                        className="task-select"
+                    >
+                        <option value="">Seleccionar tarea específica</option>
+                        {tasks.map(task => (
+                            <option key={task._id} value={task._id}>
+                                {task.title} (Cantidad actual: {task.amount})
+                            </option>
+                        ))}
+                    </select>
+                    
+                    <div className="multiplier-input-group">
+                        <input 
+                            type="number" 
+                            min="1"
+                            value={multiplier}
+                            onChange={(e) => setMultiplier(Number(e.target.value))}
+                            className="multiplier-input"
+                            placeholder="Multiplicador"
+                        />
+                        <button 
+                            onClick={handleMultiplyAmounts} 
+                            className="btn-multiply-custom"
+                            disabled={!selectedTaskId}
+                        >
+                            Multiplicar x{multiplier}
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <div className="list-task">
@@ -137,7 +204,9 @@ export const CrudTask = () => {
                                         <th>Fecha</th>
                                         <th>Tarea</th>
                                         <th>Prioridad</th>
+                                        <th>Cantidad</th>
                                         <th>Estado</th>
+                                        <th>Multiplicar</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
@@ -174,10 +243,19 @@ export const CrudTask = () => {
                                                         </select>
                                                     </td>
                                                     <td>
+                                                        <input 
+                                                            type="number" 
+                                                            value={editData.amount} 
+                                                            onChange={(e) => setEditData({...editData, amount: Number(e.target.value)})} 
+                                                            className="edit-input"
+                                                        />
+                                                    </td>
+                                                    <td>
                                                         <span className={task.completed ? 'status-completed' : 'status-pending'}>
                                                             {task.completed ? 'Completada' : 'Pendiente'}
                                                         </span>
                                                     </td>
+                                                    <td>-</td>
                                                     <td>
                                                         <div className="action-buttons">
                                                             <button 
@@ -199,18 +277,30 @@ export const CrudTask = () => {
                                                 </>
                                             ) : (
                                                 <>
-                                    
                                                     <td>{new Date(task.date).toLocaleDateString('es-ES')}</td>
                                                     <td className="task-title">{task.title}</td>
                                                     <td>
-                                                        <span className={`priority-badge ${(task.priority)}`}>
+                                                        <span className={`priority-badge ${task.priority}`}>
                                                             {task.priority}
                                                         </span>
                                                     </td>
-                                                    <td onClick={() => handleCompletedtask(task._id, !!task.completed)} style={{cursor:'pointer'}}>
+                                                    <td>{task.amount}</td>
+                                                    <td 
+                                                        onClick={() => handleCompletedtask(task._id, !task.completed)} 
+                                                        style={{cursor: 'pointer'}}
+                                                    >
                                                         <span className={task.completed ? 'status-completed' : 'status-pending'}>
                                                             {task.completed ? 'Completada' : 'Pendiente'}
                                                         </span>
+                                                    </td>
+                                                    <td>
+                                                        <button 
+                                                            onClick={() => handleQuickMultiply(task._id)}
+                                                            className="btn-multiply-row"
+                                                            title="Duplicar cantidad"
+                                                        >
+                                                            x2
+                                                        </button>
                                                     </td>
                                                     <td>
                                                         <div className="action-buttons">

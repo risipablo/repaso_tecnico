@@ -4,7 +4,8 @@ export interface ITask{
     date:Date;
     title:string;
     priority: string;
-    completed?:boolean
+    completed?:boolean;
+    amount:number
 }
 
 export interface IUsers{

@@ -16,8 +16,6 @@
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
 }
 
-
-
 .container-task {
     max-width: 1200px;
     margin: 2rem auto;
@@ -160,6 +158,119 @@
 
 .btn-add:active {
     transform: translateY(0);
+}
+
+/* Sección de multiplicador */
+.multiply-section {
+    padding: 1.5rem 2rem;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.multiply-container {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.task-select {
+    flex: 1;
+    min-width: 250px;
+    background: white;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.75rem;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.task-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    outline: none;
+}
+
+.multiplier-input-group {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.multiplier-input {
+    width: 100px;
+    background: white;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.75rem;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+}
+
+.multiplier-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    outline: none;
+}
+
+.btn-multiply-custom {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--success-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.btn-multiply-custom:hover:not(:disabled) {
+    background: #059669;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-multiply-custom:disabled {
+    background: #d1d5db;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.btn-multiply-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 50px;
+    height: 36px;
+    background: #dbeafe;
+    color: #1e40af;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-multiply-row:hover {
+    background: #bfdbfe;
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .multiply-container {
+        flex-direction: column;
+    }
+    
+    .task-select,
+    .multiplier-input-group {
+        width: 100%;
+    }
 }
 
 .list-task {

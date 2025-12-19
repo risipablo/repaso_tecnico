@@ -1,107 +1,57 @@
 
-import { useEffect, useState } from "react"
-import type { IUsers } from "../types/interface"
-
 
 type Props = {
-    userFilter:IUsers[]
-    setUserFilter: React.Dispatch<React.SetStateAction<IUsers[]>>
-    
+    jobs: string
+    setJobs: React.Dispatch<React.SetStateAction<string>>
+    areas: string
+    setAreas: React.Dispatch<React.SetStateAction<string>>
+    salaryMax: boolean
+    setSalaryMax: React.Dispatch<React.SetStateAction<boolean>>
+    salaryMin: boolean
+    setSalaryMin: React.Dispatch<React.SetStateAction<boolean>>
+    onReset: () => void
 }
 
-export function Filter({userFilter,setUserFilter}:Props){
-
-
-
-    const [jobs,setJobs] = useState<string>("")
-    const [areas, setAreas] = useState<string>("")
-    const [salaryMax,setSalaryMax] = useState<boolean>(false)
-    const [salaryMin,setSalaryMin] = useState<boolean>(false)
-    const [salaryMa, setSalaryMa] = useState<number | null>(null)
-    const [salaryMi, setSalaryMi] = useState<number | null>(null)
+export function Filter({
+    jobs, setJobs,
+    areas, setAreas,
+    salaryMax, setSalaryMax,
+    salaryMin, setSalaryMin,
+    onReset
+}: Props) {
     
-
-    const filter = () => {
-        let userFiltered = [...userFilter]
-
-        if (jobs.trim() !== ''){
-            userFiltered = userFiltered.filter(p => p.job.toUpperCase().includes(jobs.toUpperCase()))
-        }
-
-
-        if (areas.trim() !== ''){
-            userFiltered = userFiltered.filter(p => p.area.toUpperCase().includes(areas.toUpperCase()))
-        }
-
-
-        if(salaryMax && userFiltered.length > 0){
-            // se recorre todo el array para encontrar el mayor salario y ser guardo en una constante para usarla mas adelante
-            const max = userFiltered.reduce((max, user) => user.salary > max.salary ? user : max,userFiltered[0])
-
-            // Filtrar el array para averiguar el usuario de mayor salario
-            userFiltered = userFiltered.filter(p => p.salary === max.salary)
-
-        }
-
-        if(salaryMin && userFiltered.length > 0){
-            const min = userFiltered.reduce((minus, user) => user.salary < minus.salary ? user : minus, userFiltered[0] )
-            userFiltered = userFiltered.filter(p => p.salary === min.salary)
-        }
-
-        if(salaryMa !== null){
-            userFiltered = userFiltered.filter(p => p.salary <= salaryMa)
-        }
-
-        if(salaryMi !== null){
-            userFiltered = userFiltered.filter(p => p.salary >= salaryMi)
-        }
-
-
-
-        setUserFilter(userFiltered)
-    }
-
-
-    const handleSalaryMax = () =>{
+    const handleSalaryMax = () => {
         setSalaryMax(!salaryMax)
         setSalaryMin(false)
     }
 
-    const handleSalaryMin = () =>{
+    const handleSalaryMin = () => {
         setSalaryMin(!salaryMin)
         setSalaryMax(false)
     }
 
+    // Determinar si hay filtros activos
+    const hasActiveFilters = jobs !== "" || areas !== "" || salaryMax || salaryMin
 
-
-     const activeFilters = jobs !== "" || areas !== "" || salaryMax || salaryMin || salaryMa !== null || salaryMi !== null
-
-    const resetFilters = () => {
-        setJobs("")
-        setAreas("")
-        setSalaryMax(false)
-        setSalaryMin(false)
-        setSalaryMa(null)
-        setSalaryMi(null)
-
-    }
-
-
-
-    useEffect(() => {
-        filter()
-    },[jobs,salaryMax,salaryMin,areas,salaryMa,salaryMi])
-
-
-
-    return(
+    return (
         <div className="container-filter">
+            {hasActiveFilters && (
+                <button onClick={onReset}>Reset Filters</button>
+            )}
 
-            {activeFilters && <button onClick={resetFilters}>Reset Filters</button>}
-
-            <button onClick={handleSalaryMax}> Salario Maximo </button>
-            <button onClick={handleSalaryMin}> Salario Minimo </button>
+            <button 
+                onClick={handleSalaryMax} 
+                className={salaryMax ? 'active' : ''}
+            >
+                {salaryMax ? 'Mostrar todos' : 'Salario Máximo'}
+            </button>
             
+            <button 
+                onClick={handleSalaryMin}
+                className={salaryMin ? 'active' : ''}
+            >
+                {salaryMin ? 'Mostrar todos' : 'Salario Mínimo'}
+            </button>
 
             <label>
                 Ocupations:
@@ -159,33 +109,6 @@ export function Filter({userFilter,setUserFilter}:Props){
                     <option value="Administración">Administración</option>
                 </select>
             </label>
-
-            
-            <label>
-                Salario Minimo:
-                <input 
-                    type="number"
-                    value={salaryMi ?? ''}
-                    onChange={(e) => setSalaryMi(e.target.value ? parseInt(e.target.value) : null)}
-                />
-                <option value=""> Hasta </option>
-                
-            </label>
-
-
-            <label>
-                Salario Máximo:
-                <input 
-                    type="number"
-                    value={ salaryMa ?? ''}
-                    onChange={(e) => setSalaryMa(e.target.value ? parseInt(e.target.value) : null)}
-                />
-                <option value=""> Hasta </option>
-
-            </label>
-
-
         </div>
-        
     )
 }

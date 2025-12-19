@@ -17,12 +17,13 @@ export const UseTask = () => {
             .catch(err => console.log(err))
     },[])
 
-    const addTask = (date:Date, title:string, priority:string) => {
+    const addTask = (date:Date, title:string, priority:string, amount:number) => {
         if(date && title.trim() && priority.trim() !== '' ){
             axios.post(`http://localhost:3001/api/task`,{
                 date:date,
                 title:title,
                 priority:priority,
+                amount:amount,
                 completed: false
             })
             .then(response => {
@@ -65,7 +66,7 @@ export const UseTask = () => {
         .catch(err => console.log(err))
     }
 
-    const saveTask = (id:string, editData:{date:Date, title:string, priority:string}) => {
+    const saveTask = (id:string, editData:{date:Date, title:string, priority:string, amount:number}) => {
         axios.patch(`http://localhost:3001/api/task/${id}`, editData)
         .then(response => {
             const updateTask = tasks.map(task => {
@@ -95,5 +96,27 @@ export const UseTask = () => {
         .catch(err => console.log(err))
     }
 
-    return{loading, tasks , addTask, deleteTask,deleteAll,saveTask,completedTask}
+   const multiplyAmounts = (id: string, multiplier: number = 2 | 4 | 6 | 8) => {
+        axios.patch(`http://localhost:3001/api/task/${id}/multiply`, { multiplier })
+            .then(response => {
+                // Actualizar solo esa tarea en el estado
+                setTasks(prevTasks => 
+                    prevTasks.map(task => 
+                        task._id === id ? response.data : task
+                    )
+                );
+                toast.success(`Cantidad multiplicada por ${multiplier}`, {
+                    position: 'top-center'
+                });
+            })
+            .catch(err => {
+                console.log(err);
+                toast.error('Error al multiplicar la tarea', {
+                    position: 'top-center'
+                });
+            });
+    };
+
+
+    return{loading, tasks , addTask, deleteTask,deleteAll,saveTask,completedTask,multiplyAmounts}
 }

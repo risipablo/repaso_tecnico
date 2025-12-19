@@ -12,15 +12,15 @@ exports.getTask = async (req,res) => {
 }
 
 exports.addTask = async (req,res) => {
-    const {date, title, priority} = req.body
+    const {date, title, priority, amount} = req.body
 
-    if(!date || !title || !priority) {
+    if(!date || !title || !priority || !amount) {
         return res.status(400).json({message: 'Completar todos los campos requeridos'})
     }
 
     try{
         const newTask = new todoModel({
-            date,priority,title
+            date,priority,title, amount
         })
 
         const result = await newTask.save()
@@ -57,14 +57,14 @@ exports.deleteAll = async (req,res) => {
 
 exports.saveTask = async (req,res) => {
     const {id} = req.params
-    const {date,title,priority} = req.body
+    const {date,title,priority, amount} = req.body
     
-     if (!date || !title| !priority) {
+     if (!date || !title| !priority || !amount) {
         return res.status(400).json({error:"completed the sections"})
     }
 
     try{
-        const saveTask = await todoModel.findByIdAndUpdate(id,{date,title,priority}, {new:true})
+        const saveTask = await todoModel.findByIdAndUpdate(id,{date,title,priority, amount }, {new:true})
         res.json(saveTask)
     
     } catch(err) {
@@ -82,5 +82,32 @@ exports.completedTask = async(req,res) => {
         res.json(updateTask) 
     } catch(err){
         res.status(500).json({error: err.message})
+    }
+}
+
+exports.multipliAmounts = async(req,res) => {
+    const {id} = req.params;
+    const {multiplier} = req.body;
+
+    if(!multiplier || isNaN(multiplier)) {
+        return res.status(400).json({error: "Invalid multiplier"})
+    }
+
+    try {
+      const task = await todoModel.findById(id);
+        if (!task) {
+            return res.status(404).json({ error: "Tarea no encontrada" });
+        }
+        
+        const updatedTask = await todoModel.findByIdAndUpdate(
+            id,
+            { amount: task.amount * multiplier },
+            { new: true }
+        );
+        
+        res.json(updatedTask);
+      
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
 }

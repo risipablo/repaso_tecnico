@@ -17,6 +17,10 @@ const todoSchema = new mongoose.Schema({
     completed:{
         type:Boolean,
         default:false
+    },
+    amount:{
+        type:Number,
+        required:true
     }
 
 })
