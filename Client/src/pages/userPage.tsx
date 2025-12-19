@@ -3,9 +3,9 @@ import { useUser } from "../hook/useUser"
 import { Search } from "../components/search"
 import { Filter } from "../components/filter"
 import type { IUsers } from "../types/interface"
-
-
-
+import { OrderName } from "../components/orderName"
+import { Promedios } from "../components/promedios"
+import "../style/userPage.css"
 
 export function UserPage() {
     const { fetch, userFilter, user, setUserFilter, showAllUsers } = useUser()
@@ -17,6 +17,8 @@ export function UserPage() {
     const [filterAreas, setFilterAreas] = useState<string>("")
     const [filterSalaryMax, setFilterSalaryMax] = useState<boolean>(false)
     const [filterSalaryMin, setFilterSalaryMin] = useState<boolean>(false)
+    const [orderAge, setOrderAge] = useState<boolean>(false)
+    const [orderSalary, setOrderSalary] = useState<boolean>(false)
 
     useEffect(() => {
         fetch()
@@ -51,21 +53,34 @@ export function UserPage() {
     const applyAllFilters = (baseUsers: IUsers[]) => {
         let filtered = [...baseUsers]
 
-        // Filtro por trabajo
+
+        if(orderAge){
+            filtered = filtered.sort((a,b) => {
+                return b.age - a.age
+            })
+        }
+
+        if(orderSalary){
+            filtered = filtered.sort((a,b) => {
+                return b.salary - a.salary
+            })
+
+        }
+        
         if (filterJobs.trim() !== '') {
             filtered = filtered.filter(p => 
                 p.job.toUpperCase().includes(filterJobs.toUpperCase())
             )
         }
 
-        // Filtro por área
+        
         if (filterAreas.trim() !== '') {
             filtered = filtered.filter(p => 
                 p.area.toUpperCase().includes(filterAreas.toUpperCase())
             )
         }
 
-        // Filtro por salario máximo
+        
         if (filterSalaryMax && filtered.length > 0) {
             const max = filtered.reduce((max, user) => 
                 user.salary > max.salary ? user : max,
@@ -74,7 +89,7 @@ export function UserPage() {
             filtered = filtered.filter(p => p.salary === max.salary)
         }
 
-        // Filtro por salario mínimo
+
         if (filterSalaryMin && filtered.length > 0) {
             const min = filtered.reduce((minus, user) => 
                 user.salary < minus.salary ? user : minus,
@@ -86,10 +101,12 @@ export function UserPage() {
         setUserFilter(filtered)
     }
 
-    // Resetear TODO (búsqueda + filtros)
+    // Resetear TODO (búsqueda y filtros)
     const resetAllFiltersAndSearch = () => {
         setFilterJobs("")
         setFilterAreas("")
+        setOrderAge(false)
+        setOrderSalary(false)
         setFilterSalaryMax(false)
         setFilterSalaryMin(false)
         showAllUsers()
@@ -101,6 +118,8 @@ export function UserPage() {
         setFilterAreas("")
         setFilterSalaryMax(false)
         setFilterSalaryMin(false)
+        setOrderSalary(false)
+        setOrderAge(false)
         
         // Re-aplicar solo búsqueda si existe
         if (hasActiveSearch && searchResults.length > 0) {
@@ -114,7 +133,7 @@ export function UserPage() {
     useEffect(() => {
         const baseUsers = hasActiveSearch ? searchResults : user
         applyAllFilters(baseUsers)
-    }, [filterJobs, filterAreas, filterSalaryMax, filterSalaryMin])
+    }, [filterJobs, filterAreas, filterSalaryMax, filterSalaryMin, orderAge, orderSalary])
 
     return (
         <div className="user-container">
@@ -139,6 +158,10 @@ export function UserPage() {
                     setSalaryMax={setFilterSalaryMax}
                     salaryMin={filterSalaryMin}
                     setSalaryMin={setFilterSalaryMin}
+                    ages={orderAge}
+                    setAges={setOrderAge}
+                    salarys={orderSalary}
+                    setSalarys={setOrderSalary}
                     onReset={resetOnlyFilters}
                 />
             </div>
@@ -150,7 +173,7 @@ export function UserPage() {
                     <table>
                         <thead>
                             <tr>
-                                <th>Name</th>
+                                <th>Name <OrderName userFilter={userFilter} setUserFilter={setUserFilter}/></th>
                                 <th>Job</th>
                                 <th>Area</th>
                                 <th>Age</th>
@@ -165,10 +188,15 @@ export function UserPage() {
                                     <td>{user.area}</td>
                                     <td>{user.age}</td>
                                     <td>${user.salary.toLocaleString()}</td>
+        
                                 </tr>
                             ))}
+
+                            
                         </tbody>
+                        
                     </table>
+                    <Promedios userFilter={userFilter} />
                 </div>
             )}
         </div>

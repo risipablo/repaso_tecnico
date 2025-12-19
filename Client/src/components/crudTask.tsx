@@ -1,8 +1,9 @@
 import {  useState } from "react"
 import { UseTask } from "../hook/useTask"
 import type { ITask } from "../types/interface"
-import "../components/task.css"
+import "../style/task.css"
 import { AlertCircle, Calendar, Edit2, Plus, Save, Trash2, X } from "lucide-react"
+
 
 
 

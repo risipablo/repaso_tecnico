@@ -3,7 +3,7 @@ import { MoveDown, MoveUp } from 'lucide-react'
 import type { IUsers } from '../types/interface'
 import { useState } from 'react'
 
-type Props = {
+export type Props = {
     userFilter:IUsers[]
     setUserFilter: React.Dispatch<React.SetStateAction<IUsers[]>>
     
