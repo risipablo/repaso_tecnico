@@ -9,18 +9,12 @@ type Props = {
     setSalaryMax: React.Dispatch<React.SetStateAction<boolean>>
     salaryMin: boolean
     setSalaryMin: React.Dispatch<React.SetStateAction<boolean>>
-    ages: boolean | number
-    setAges: React.Dispatch<React.SetStateAction<boolean>>
-    salarys: boolean
-    setSalarys: React.Dispatch<React.SetStateAction<boolean>>
     onReset: () => void
 }
 
 export function Filter({
     jobs, setJobs,
     areas, setAreas,
-    ages,setAges,
-    salarys,setSalarys,
     salaryMax, setSalaryMax,
     salaryMin, setSalaryMin,
     onReset
@@ -36,16 +30,9 @@ export function Filter({
         setSalaryMax(false)
     }
 
-    const handleAge = () => {
-        setAges(!ages)
-    }
-
-    const handleOrderSalary = () => {
-        setSalarys(!salarys)
-    }
 
     // Determinar si hay filtros activos
-    const hasActiveFilters = jobs !== "" || areas !== "" || salaryMax || salaryMin || ages || salarys
+    const hasActiveFilters = jobs !== "" || areas !== "" || salaryMax || salaryMin 
     return (
         <div className="container-filter">
             {hasActiveFilters && (
@@ -125,8 +112,7 @@ export function Filter({
                 </select>
             </label>
 
-             <button onClick={handleAge} className={ages ? 'active' : ''} > {ages ? "Mayor a menor" : "Menor a mayor"}</button>
-             <button onClick={handleOrderSalary} className={salarys ? 'active' : ''} > {salarys ? "Mayor a menor" : "Menor a mayor"}</button>
+            
         </div>
     )
 }

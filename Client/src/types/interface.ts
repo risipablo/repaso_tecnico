@@ -1,11 +1,12 @@
 
-export interface ITask{
-    _id:string
-    date:Date;
-    title:string;
-    priority: string;
-    completed?:boolean;
-    amount:number
+export interface ITask {
+    _id: string;
+    date: Date;
+    title: string | string[];        // Puede ser string O array
+    priority: string | string[];     // Puede ser string O array
+    completed?: boolean;
+    amount: number | number[];       // Puede ser number O array
+     subtaskCompleted?: boolean[]
 }
 
 export interface IUsers{

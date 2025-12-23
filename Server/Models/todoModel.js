@@ -7,19 +7,23 @@ const todoSchema = new mongoose.Schema({
         default:Date.now
     },
     title:{
-        type:String,
+        type:[String],
         required:true
     },
     priority:{
-        type:String,
+        type:[String],
         required:true
     },
     completed:{
         type:Boolean,
         default:false
     },
+        subtaskCompleted: {  // ← NUEVO: Array de estados por subtarea
+        type: [Boolean],
+        default: []
+    },
     amount:{
-        type:Number,
+        type:[Number],
         required:true
     }
 

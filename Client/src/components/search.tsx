@@ -14,7 +14,11 @@ export function Search({filterData, placeholder}: ISearchProps){
             return
         }
 
-        const dataSearch = inputValue.toLocaleUpperCase().split(/\s+/).filter(palabra => palabra.trim() !== '')
+        const dataSearch = inputValue.toLocaleUpperCase()
+        .normalize("NFD")
+        .replace(/[\\u0300-\\u036f]/g, "")
+        .split(/\s+/)
+        .filter(palabra => palabra.trim() !== '')
         filterData(dataSearch)
         setSearching(true)
     }

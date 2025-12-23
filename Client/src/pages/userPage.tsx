@@ -6,9 +6,11 @@ import type { IUsers } from "../types/interface"
 import { OrderName } from "../components/orderName"
 import { Promedios } from "../components/promedios"
 import "../style/userPage.css"
+import { OrderSalary } from "../components/orderSalary"
+import { OrderAge } from "../components/orderAge"
 
 export function UserPage() {
-    const { fetch, userFilter, user, setUserFilter, showAllUsers } = useUser()
+    const { fetch, userFilter, user, setUserFilter, showAllUsers,  } = useUser()
     const [searchResults, setSearchResults] = useState<IUsers[]>([])
     const [hasActiveSearch, setHasActiveSearch] = useState<boolean>(false)
     
@@ -17,8 +19,7 @@ export function UserPage() {
     const [filterAreas, setFilterAreas] = useState<string>("")
     const [filterSalaryMax, setFilterSalaryMax] = useState<boolean>(false)
     const [filterSalaryMin, setFilterSalaryMin] = useState<boolean>(false)
-    const [orderAge, setOrderAge] = useState<boolean>(false)
-    const [orderSalary, setOrderSalary] = useState<boolean>(false)
+    
 
     useEffect(() => {
         fetch()
@@ -30,8 +31,11 @@ export function UserPage() {
             // Resetear TODO
             setSearchResults([])
             setHasActiveSearch(false)
-            resetAllFiltersAndSearch()
+            // resetAllFiltersAndSearch()
+            showAllUsers()
         } else {
+
+
             // Aplicar búsqueda
             const results = user.filter(prod => 
                 searchTerms.every(term => 
@@ -53,19 +57,6 @@ export function UserPage() {
     const applyAllFilters = (baseUsers: IUsers[]) => {
         let filtered = [...baseUsers]
 
-
-        if(orderAge){
-            filtered = filtered.sort((a,b) => {
-                return b.age - a.age
-            })
-        }
-
-        if(orderSalary){
-            filtered = filtered.sort((a,b) => {
-                return b.salary - a.salary
-            })
-
-        }
         
         if (filterJobs.trim() !== '') {
             filtered = filtered.filter(p => 
@@ -105,8 +96,7 @@ export function UserPage() {
     const resetAllFiltersAndSearch = () => {
         setFilterJobs("")
         setFilterAreas("")
-        setOrderAge(false)
-        setOrderSalary(false)
+        
         setFilterSalaryMax(false)
         setFilterSalaryMin(false)
         showAllUsers()
@@ -118,8 +108,7 @@ export function UserPage() {
         setFilterAreas("")
         setFilterSalaryMax(false)
         setFilterSalaryMin(false)
-        setOrderSalary(false)
-        setOrderAge(false)
+        
         
         // Re-aplicar solo búsqueda si existe
         if (hasActiveSearch && searchResults.length > 0) {
@@ -133,7 +122,7 @@ export function UserPage() {
     useEffect(() => {
         const baseUsers = hasActiveSearch ? searchResults : user
         applyAllFilters(baseUsers)
-    }, [filterJobs, filterAreas, filterSalaryMax, filterSalaryMin, orderAge, orderSalary])
+    }, [filterJobs, filterAreas, filterSalaryMax, filterSalaryMin])
 
     return (
         <div className="user-container">
@@ -158,10 +147,6 @@ export function UserPage() {
                     setSalaryMax={setFilterSalaryMax}
                     salaryMin={filterSalaryMin}
                     setSalaryMin={setFilterSalaryMin}
-                    ages={orderAge}
-                    setAges={setOrderAge}
-                    salarys={orderSalary}
-                    setSalarys={setOrderSalary}
                     onReset={resetOnlyFilters}
                 />
             </div>
@@ -176,8 +161,8 @@ export function UserPage() {
                                 <th>Name <OrderName userFilter={userFilter} setUserFilter={setUserFilter}/></th>
                                 <th>Job</th>
                                 <th>Area</th>
-                                <th>Age</th>
-                                <th>Salary</th>
+                                <th>Age <OrderAge userFilter={userFilter} setUserFilter={setUserFilter} /> </th>
+                                <th>Salary <OrderSalary userFilter={userFilter} setUserFilter={setUserFilter}/> </th>
                             </tr>
                         </thead>
                         <tbody>
