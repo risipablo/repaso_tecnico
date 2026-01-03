@@ -11,12 +11,16 @@ const app = express()
 app.use(express.json())
 
 const corsOptions = {
-    origin: ['http://localhost:5173','https://repaso-tecnico.onrender.com'],
-    optionsSuccessStatus: 200,
-    methods: 'GET,POST,DELETE,PUT,PATCH',
-    credentials: true,
-    
+  origin: [
+    'http://localhost:5173',
+    'https://repaso-tecnico.onrender.com',
+    'https://repaso-tecnico.vercel.app'
+  ],
+  methods: 'GET,POST,DELETE,PUT,PATCH',
+  credentials: true,
+  optionsSuccessStatus: 200
 };
+
 
 app.use(cors(corsOptions))
 
