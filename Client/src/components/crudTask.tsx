@@ -696,7 +696,7 @@ export const CrudTask = () => {
                                                             const isSubTaskCompleted = task.subtaskCompleted?.[index] || false
                                                             return (
                                                                 <div key={index} className={`amount-item ${isSubTaskCompleted ? 'amount-completed-item' : ''}`}>
-                                                                    <span className="amount-value">${amountItem.toLocaleString()}</span>
+                                                                    <span className="amount-value">${amountItem}</span>
                                                                     {isSubTaskCompleted && (
                                                                         <span className="amount-completed">✓</span>
                                                                     )}

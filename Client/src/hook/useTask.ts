@@ -3,6 +3,8 @@ import type { ITask } from "../types/interface"
 import axios from "axios"
 import toast from "react-hot-toast"
 
+const server = "https://repaso-tecnico.onrender.com"
+
 export const UseTask = () => {
     const [tasks,setTasks] = useState<ITask[]>([])
     const [loading,setLoading] = useState(true)
@@ -10,7 +12,7 @@ export const UseTask = () => {
     useEffect(() => {
         
             setLoading(false)
-            axios.get(`http://localhost:3001/api/task`)
+            axios.get(`${server}/api/task`)
             .then(response => {
                 setTasks(response.data)
             }) 
@@ -19,7 +21,7 @@ export const UseTask = () => {
 
     const addTask = (date:Date, title:string, priority:string, amount:number) => {
         if(date && title.trim() && priority.trim() !== '' ){
-            axios.post(`http://localhost:3001/api/task`,{
+            axios.post(`${server}/api/task`,{
                 date:date,
                 title:title,
                 priority:priority,
@@ -42,7 +44,7 @@ export const UseTask = () => {
     }
 
     const deleteTask = (id:string) => {
-        axios.delete(`http://localhost:3001/api/task/${id}`)
+        axios.delete(`${server}/api/task/${id}`)
         .then(() => {
             const deleteTask = tasks.filter(task => task._id !== id)
             setTasks(deleteTask)
@@ -54,7 +56,7 @@ export const UseTask = () => {
     }
 
     const deleteAll = () => {
-        axios.delete(`http://localhost:3001/api/task`)
+        axios.delete(`${server}/api/task`)
         .then(response => {
 
             setTasks([])
@@ -67,7 +69,7 @@ export const UseTask = () => {
     }
 
     const saveTask = (id:string, editData:{date:Date,  priority?:string, amount?:number}) => {
-        axios.patch(`http://localhost:3001/api/task/${id}`, editData)
+        axios.patch(`${server}/api/task/${id}`, editData)
         .then(response => {
             const updateTask = tasks.map(task => {
                 if (task._id === id) {
@@ -85,7 +87,7 @@ export const UseTask = () => {
 
 
     const multiplyAmounts = (id: string, multiplier: number) => {
-    axios.patch(`http://localhost:3001/api/task/${id}/multiply`, { multiplier })
+    axios.patch(`${server}/api/task/${id}/multiply`, { multiplier })
         .then(response => {
             // Actualizar la tarea en el estado
             setTasks(prevTasks => 
@@ -116,7 +118,7 @@ export const UseTask = () => {
 
 
   const addNewTask = (taskId: string, title: string, priority: string, amount: number) => {
-    axios.post(`http://localhost:3001/api/task/${taskId}/addtask`, {
+    axios.post(`${server}/api/task/${taskId}/addtask`, {
         title,      
         priority,   
         amount     
@@ -132,7 +134,7 @@ export const UseTask = () => {
 }
 
 const editSubTask = (taskId: string, subTaskIndex: number, updatedSubTask: { title?: string, priority?: string, amount?: number }) => {
-    axios.patch(`http://localhost:3001/api/task/${taskId}/subtasks/${subTaskIndex}`, updatedSubTask)
+    axios.patch(`${server}/api/task/${taskId}/subtasks/${subTaskIndex}`, updatedSubTask)
         .then(response => {
             setTasks(prevTasks => 
                 prevTasks.map(task => 
@@ -150,7 +152,7 @@ const editSubTask = (taskId: string, subTaskIndex: number, updatedSubTask: { tit
 // COMPLETAR UNA SUBTAREA ESPECÍFICA
 // Función para alternar estado de subtarea
 const toggleSubTaskComplete = (taskId: string, subTaskIndex: number) => {
-    axios.patch(`http://localhost:3001/api/task/${taskId}/subtasks/${subTaskIndex}/toggle`)
+    axios.patch(`${server}/api/task/${taskId}/subtasks/${subTaskIndex}/toggle`)
         .then(response => {
             // Actualizar solo esa tarea en el estado
             setTasks(prevTasks => 
@@ -178,7 +180,7 @@ const toggleSubTaskComplete = (taskId: string, subTaskIndex: number) => {
 
 // Función para completar TODAS las subtareas de una tarea
 const completeAllSubTasks = (taskId: string) => {
-    axios.patch(`http://localhost:3001/api/task/${taskId}/complete-all`)
+    axios.patch(`${server}/api/task/${taskId}/complete-all`)
         .then(response => {
             setTasks(prevTasks => 
                 prevTasks.map(task => 
@@ -194,7 +196,7 @@ const completeAllSubTasks = (taskId: string) => {
 }
 // ELIMINAR UNA SUBTAREA ESPECÍFICA
 const deleteSubTask = (taskId: string, subTaskIndex: number) => {
-    axios.delete(`http://localhost:3001/api/task/${taskId}/subtasks/${subTaskIndex}`)
+    axios.delete(`${server}/api/task/${taskId}/subtasks/${subTaskIndex}`)
         .then(response => {
             setTasks(prevTasks => 
                 prevTasks.map(task => 

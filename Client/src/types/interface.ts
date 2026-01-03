@@ -21,5 +21,4 @@ export interface IUsers{
 export interface ISearchProps{
     placeholder: string;
     filterData: (searchterms: string[]) => void
-    
 }

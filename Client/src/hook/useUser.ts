@@ -31,18 +31,4 @@ export const useUser = () => {
 
 
 
-    // const orderName = () => {
-    //     const orderFunction = [...userFilter].sort((a,b) =>  order ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name))
-    //     setUserFilter(orderFunction)
-    //     setOrder(!order)
-        
-    // }
-
-        // const salaryPromedio = () => {
-    //     const salaryProm = user.reduce((acu, prom) => {
-    //         return acu + prom.salary
-    //     } , 0)/ user.length
-
-    //     setPromedio(salaryProm)
-    //     return salaryProm
-    // }
+  
